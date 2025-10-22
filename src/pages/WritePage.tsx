@@ -33,7 +33,7 @@ const WritePage = () => {
       // 🚨 실제 백엔드 API 엔드포인트로 교체해야 합니다.
       // 세션 쿠키는 브라우저가 자동으로 요청에 포함시켜 보냅니다.
       const response = await axios.post(
-        'http://13.209.68.198/api/posts',
+        'https://juicehan.shop/api/posts',
         {
           title,
           content,

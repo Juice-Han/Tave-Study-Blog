@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const res = await axios.get('http://13.209.68.198/api/auth/me')
+        const res = await axios.get('https://juicehan.shop/api/auth/me')
         console.log('사용자 정보', res.data)
         setUserName(res.data)
       } catch (error) {

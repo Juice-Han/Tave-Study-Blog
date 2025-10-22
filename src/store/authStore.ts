@@ -40,7 +40,7 @@ const useAuthStore = create<AuthState>((set) => ({
       try {
         // 백엔드에 "내 정보 줘" 요청
         // 쿠키가 유효하면 사용자 정보를, 아니면 401 에러를 반환해야 함
-        const response = await axios.get('http://13.209.68.198/api/auth/me') // <-- 🚨 실제 엔드포인트로 변경
+        const response = await axios.get('https:/juicehan.shop/api/auth/me') // <-- 🚨 실제 엔드포인트로 변경
 
         // 성공 시: user 상태 업데이트
         set({ user: response.data, isLoading: false })
@@ -58,7 +58,7 @@ const useAuthStore = create<AuthState>((set) => ({
       try {
         // 백엔드에 로그인 요청 (성공 시 쿠키가 세팅되고 사용자 정보 반환)
         const response = await axios.post(
-          'http://13.209.68.198/api/auth/login',
+          'https://juicehan.shop/api/auth/login',
           {
             email,
             password,
@@ -83,7 +83,7 @@ const useAuthStore = create<AuthState>((set) => ({
     logout: async () => {
       try {
         // 백엔드에 로그아웃 요청 (세션 파기 및 쿠키 삭제)
-        await axios.post('http://13.209.68.198/api/auth/logout') // <-- 🚨 실제 엔드포인트로 변경
+        await axios.post('https://juicehan.shop/api/auth/logout') // <-- 🚨 실제 엔드포인트로 변경
       } catch (error) {
         console.error('로그아웃 API 호출 실패:', error)
       } finally {

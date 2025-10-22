@@ -18,7 +18,7 @@ const SignOnPage = () => {
     }
 
     // 실제 API 엔드포인트로 교체해야 합니다.
-    const API_ENDPOINT = 'http://13.209.68.198/api/auth/register'
+    const API_ENDPOINT = 'https://juicehan.shop/api/auth/register'
 
     try {
       const response = await axios.post(API_ENDPOINT, {

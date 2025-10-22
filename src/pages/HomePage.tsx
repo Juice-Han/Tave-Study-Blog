@@ -39,7 +39,7 @@ const HomePage = () => {
     const fetchPosts = async () => {
       try {
         setIsLoading(true)
-        const response = await axios.get('http://13.209.68.198/api/posts')
+        const response = await axios.get('https://juicehan.shop/api/posts')
         setPosts(response.data.posts)
         setError(null)
       } catch (err) {
