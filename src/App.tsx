@@ -1,51 +1,65 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import PostDetail from './pages/PostDetail'
-import CreatePost from './pages/CreatePost'
-import EditPost from './pages/EditPost'
-import { useEffect } from 'react'
-import { useAuthStore } from './store/authStore'
+import { useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import UserProvider from './providers/UserProvider'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import type { UserInfo } from './contexts/UserContext'
+import WritePage from './pages/WritePage'
+import DetailPage from './pages/DetailPage'
+import PostProvider from './providers/PostProvider'
+import type { Post } from './contexts/PostContext'
 
 function App() {
-  const checkAuth = useAuthStore((s) => s.checkAuth)
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    userId: null,
+    username: null,
+    email: null,
+    isLogin: false,
+    token: null,
+  })
 
-  useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+  const changeUserInfo = (updates: Partial<UserInfo>) => {
+    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, ...updates }))
+  }
+
+  const [posts, setPosts] = useState<Post[] | null>(null)
+
+  const changePosts = (posts: Post[]) => {
+    setPosts(posts)
+  }
 
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route
-          path='/'
-          element={<Home />}
-        />
-        <Route
-          path='/login'
-          element={<Login />}
-        />
-        <Route
-          path='/register'
-          element={<Register />}
-        />
-        <Route
-          path='/posts/:id'
-          element={<PostDetail />}
-        />
-        <Route
-          path='/create'
-          element={<CreatePost />}
-        />
-        <Route
-          path='/edit/:id'
-          element={<EditPost />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <UserProvider user={{ userInfo, changeUserInfo }}>
+        <PostProvider posts={{ posts, changePosts }}>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path='/'
+                element={<HomePage />}
+              />
+              <Route
+                path='/login'
+                element={<LoginPage />}
+              />
+              <Route
+                path='/register'
+                element={<RegisterPage />}
+              />
+              <Route
+                path='/posts/write'
+                element={<WritePage />}
+              />
+              <Route
+                path='/posts/:id'
+                element={<DetailPage />}
+              />
+            </Routes>
+          </BrowserRouter>
+        </PostProvider>
+      </UserProvider>
+    </>
   )
 }
 
