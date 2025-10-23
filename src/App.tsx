@@ -9,12 +9,12 @@ import WritePage from './pages/WritePage'
 import DetailPage from './pages/DetailPage'
 import PostProvider from './providers/PostProvider'
 import type { Post } from './contexts/PostContext'
+import EditPage from './pages/EditPage'
 
 function App() {
   const [userInfo, setUserInfo] = useState<UserInfo>({
     userId: null,
     username: null,
-    email: null,
     isLogin: false,
     token: null,
   })
@@ -25,13 +25,23 @@ function App() {
 
   const [posts, setPosts] = useState<Post[] | null>(null)
 
-  const changePosts = (posts: Post[]) => {
+  const changePosts = (posts: Post[] | null) => {
     setPosts(posts)
+  }
+
+  const logout = () => {
+    changePosts(null)
+    changeUserInfo({
+      userId: null,
+      username: null,
+      isLogin: false,
+      token: null,
+    })
   }
 
   return (
     <>
-      <UserProvider user={{ userInfo, changeUserInfo }}>
+      <UserProvider user={{ userInfo, changeUserInfo, logout }}>
         <PostProvider posts={{ posts, changePosts }}>
           <BrowserRouter>
             <Routes>
@@ -54,6 +64,10 @@ function App() {
               <Route
                 path='/posts/:id'
                 element={<DetailPage />}
+              />
+              <Route
+                path='/posts/edit/:id'
+                element={<EditPage />}
               />
             </Routes>
           </BrowserRouter>

@@ -11,7 +11,7 @@ export interface Post {
 
 export interface PostContextType {
   posts: Post[] | null
-  changePosts: (posts: Post[]) => void
+  changePosts: (posts: Post[] | null) => void
 }
 
 export const PostContext = createContext<PostContextType | null>(null)

@@ -14,7 +14,7 @@ function HomePage() {
   }
 
   const navigator = useNavigate()
-  const { userInfo } = userContext
+  const { userInfo, logout } = userContext
   const { posts, changePosts } = postContext
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<AxiosError | null>(null)
@@ -40,6 +40,12 @@ function HomePage() {
     }
     getPosts()
   }, [userInfo])
+
+  const logoutHandler = () => {
+    logout()
+    changePosts(null)
+    navigator('/login')
+  }
 
   const renderContent = () => {
     if (isLoading) {
@@ -80,6 +86,16 @@ function HomePage() {
 
   return (
     <>
+      <div>
+        {userInfo.isLogin && (
+          <button
+            onClick={logoutHandler}
+            className='bg-red-400'
+          >
+            로그아웃({userInfo.username})
+          </button>
+        )}
+      </div>
       <div>
         <button
           onClick={() => navigator('/posts/write')}

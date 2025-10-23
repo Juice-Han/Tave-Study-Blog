@@ -21,8 +21,14 @@ function LoginPage() {
         password,
       })
       if (res.status === 200) {
-        const { id, email, token } = res.data
-        changeUserInfo({ userId: id, username, email, isLogin: true, token })
+        const { user, token } = res.data
+        console.log(res.data)
+        changeUserInfo({
+          userId: user.id,
+          username: user.username,
+          isLogin: true,
+          token,
+        })
         navigator('/')
       } else {
         alert('아이디와 비밀번호를 다시 확인해주세요.')

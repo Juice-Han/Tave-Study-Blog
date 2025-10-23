@@ -33,6 +33,7 @@ function DetailPage() {
           },
         )
         setPost(res.data.post)
+        console.log(res.data.post, userInfo)
       } catch (e) {
         console.log(e)
         alert('글을 불러오던 중 에러가 발생했습니다.')
@@ -43,6 +44,25 @@ function DetailPage() {
     }
     getPostDetail()
   }, [])
+
+  const editPost = (postId: number) => {
+    navigator(`/posts/edit/${postId}`)
+  }
+
+  const deletePost = async (postId: number) => {
+    try {
+      await axios.delete(`https://juicehan.shop/api/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
+      alert('글이 성공적으로 삭제되었습니다.')
+      navigator('/')
+    } catch (e) {
+      console.log(e)
+      alert('글 삭제 중 오류가 발생했습니다.')
+    }
+  }
   if (isLoading) {
     return (
       <div>
@@ -55,9 +75,27 @@ function DetailPage() {
       {post ?
         <div>
           <div>
-            <p>제목: {post?.title}</p>
-            <p>내용: {post?.content}</p>
-            <p>작성자: {post?.author_username}</p>
+            <p>제목: {post.title}</p>
+            <p>내용: {post.content}</p>
+            <p>작성자: {post.author_username}</p>
+          </div>
+          <div>
+            {userInfo.userId === post.author_id && (
+              <div>
+                <button
+                  onClick={() => editPost(post.id)}
+                  className='text-green-700'
+                >
+                  수정
+                </button>
+                <button
+                  onClick={() => deletePost(post.id)}
+                  className='text-red-600'
+                >
+                  삭제
+                </button>
+              </div>
+            )}
           </div>
           <button
             onClick={() => navigator('/')}
