@@ -1,18 +1,12 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserContext } from '../contexts/UserContext'
+import { useUserContext } from '../contexts/UserContext'
 import axios, { AxiosError } from 'axios'
-import { PostContext, type Post } from '../contexts/PostContext'
+import { usePostContext, type Post } from '../contexts/PostContext'
 
 function HomePage() {
-  const userContext = useContext(UserContext)
-  const postContext = useContext(PostContext)
-  if (!userContext || !postContext) {
-    throw new Error(
-      'UserContext or PostContext must be used within its Provider',
-    )
-  }
-
+  const userContext = useUserContext()
+  const postContext = usePostContext()
   const navigator = useNavigate()
   const { userInfo, logout } = userContext
   const { posts, changePosts } = postContext

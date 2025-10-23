@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { UserContext } from '../contexts/UserContext'
+import { useUserContext } from '../contexts/UserContext'
 
 interface Post {
   id: number
@@ -14,12 +14,9 @@ interface Post {
 function DetailPage() {
   const param = useParams()
   const navigator = useNavigate()
-  const context = useContext(UserContext)
+  const context = useUserContext()
   const [isLoading, setIsLoading] = useState(true)
   const [post, setPost] = useState<Post | null>(null)
-  if (!context) {
-    throw new Error('UserContext must be used within a UserProvider')
-  }
   const { userInfo } = context
   useEffect(() => {
     const getPostDetail = async () => {

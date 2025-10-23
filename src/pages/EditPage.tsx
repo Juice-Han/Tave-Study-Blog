@@ -1,17 +1,12 @@
 import axios from 'axios'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { UserContext } from '../contexts/UserContext'
-import { PostContext } from '../contexts/PostContext'
+import { useUserContext } from '../contexts/UserContext'
+import { usePostContext } from '../contexts/PostContext'
 
 function EditPage() {
-  const userContext = useContext(UserContext)
-  const postContext = useContext(PostContext)
-  if (!userContext || !postContext) {
-    throw new Error(
-      'UserContext and PostContext must be used within its Provider',
-    )
-  }
+  const userContext = useUserContext()
+  const postContext = usePostContext()
   const { userInfo } = userContext
   const { posts } = postContext
   const navigator = useNavigate()

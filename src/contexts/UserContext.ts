@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 export interface UserInfo {
   userId: number | null
@@ -14,3 +14,11 @@ export interface UserContextType {
 }
 
 export const UserContext = React.createContext<UserContextType | null>(null)
+
+export function useUserContext() {
+  const context = useContext(UserContext)
+  if (!context) {
+    throw new Error('UserContext must be used within a UserProvider')
+  }
+  return context
+}

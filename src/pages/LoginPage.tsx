@@ -1,13 +1,10 @@
 import axios from 'axios'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { UserContext } from '../contexts/UserContext'
+import { useUserContext } from '../contexts/UserContext'
 
 function LoginPage() {
-  const context = useContext(UserContext)
-  if (!context) {
-    throw new Error('UserContext must be used within a UserProvider')
-  }
+  const context = useUserContext()
   const { changeUserInfo } = context
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

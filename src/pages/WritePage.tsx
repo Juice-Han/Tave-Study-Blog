@@ -1,13 +1,10 @@
 import axios from 'axios'
-import { useContext, useState } from 'react'
-import { UserContext } from '../contexts/UserContext'
+import { useState } from 'react'
+import { useUserContext } from '../contexts/UserContext'
 import { useNavigate } from 'react-router-dom'
 
 function WritePage() {
-  const context = useContext(UserContext)
-  if (!context) {
-    throw new Error('UserContext must be used within a UserProvider')
-  }
+  const context = useUserContext()
   const { userInfo } = context
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
