@@ -19,7 +19,6 @@ function LoginPage() {
       })
       if (res.status === 200) {
         const { user, token } = res.data
-        console.log(res.data)
         changeUserInfo({
           userId: user.id,
           username: user.username,

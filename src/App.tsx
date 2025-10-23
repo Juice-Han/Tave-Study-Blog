@@ -1,15 +1,16 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import UserProvider from './providers/UserProvider'
-import HomePage from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
 import type { UserInfo } from './contexts/UserContext'
-import WritePage from './pages/WritePage'
-import DetailPage from './pages/DetailPage'
 import PostProvider from './providers/PostProvider'
 import type { Post } from './contexts/PostContext'
-import EditPage from './pages/EditPage'
+import HomePageWrappedByErrorBoundary from './pages/HomePageWrappedByErrorBoundary'
+
+const LoginPage = lazy(() => import('./pages/LoginPage'))
+const RegisterPage = lazy(() => import('./pages/RegisterPage'))
+const WritePage = lazy(() => import('./pages/WritePage'))
+const DetailPage = lazy(() => import('./pages/DetailPage'))
+const EditPage = lazy(() => import('./pages/EditPage'))
 
 function App() {
   const [userInfo, setUserInfo] = useState<UserInfo>({
@@ -44,32 +45,34 @@ function App() {
       <UserProvider user={{ userInfo, changeUserInfo, logout }}>
         <PostProvider posts={{ posts, changePosts }}>
           <BrowserRouter>
-            <Routes>
-              <Route
-                path='/'
-                element={<HomePage />}
-              />
-              <Route
-                path='/login'
-                element={<LoginPage />}
-              />
-              <Route
-                path='/register'
-                element={<RegisterPage />}
-              />
-              <Route
-                path='/posts/write'
-                element={<WritePage />}
-              />
-              <Route
-                path='/posts/:id'
-                element={<DetailPage />}
-              />
-              <Route
-                path='/posts/edit/:id'
-                element={<EditPage />}
-              />
-            </Routes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Routes>
+                <Route
+                  path='/'
+                  element={<HomePageWrappedByErrorBoundary />}
+                />
+                <Route
+                  path='/login'
+                  element={<LoginPage />}
+                />
+                <Route
+                  path='/register'
+                  element={<RegisterPage />}
+                />
+                <Route
+                  path='/posts/write'
+                  element={<WritePage />}
+                />
+                <Route
+                  path='/posts/:id'
+                  element={<DetailPage />}
+                />
+                <Route
+                  path='/posts/edit/:id'
+                  element={<EditPage />}
+                />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </PostProvider>
       </UserProvider>

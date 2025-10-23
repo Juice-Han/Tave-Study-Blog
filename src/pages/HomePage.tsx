@@ -5,32 +5,36 @@ import axios, { AxiosError } from 'axios'
 import { usePostContext, type Post } from '../contexts/PostContext'
 
 function HomePage() {
+  if (Math.random() > 0.8) {
+    throw new Error('App 컴포넌트에서 에러 발생')
+  }
   const userContext = useUserContext()
   const postContext = usePostContext()
   const navigator = useNavigate()
   const { userInfo, logout } = userContext
   const { posts, changePosts } = postContext
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<AxiosError | null>(null)
+  const getPosts = async () => {
+    setIsLoading(true)
+    try {
+      const res = await axios.get('https://juicehan.shop/api/posts', {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      })
+      changePosts(res.data.posts)
+    } catch (e) {
+      console.log(e)
+      setError(e as AxiosError)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   useEffect(() => {
     if (!userInfo.isLogin) {
       navigator('/login')
       return
-    }
-    const getPosts = async () => {
-      try {
-        const res = await axios.get('https://juicehan.shop/api/posts', {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        })
-        changePosts(res.data.posts)
-      } catch (e) {
-        console.log(e)
-        setError(e as AxiosError)
-      } finally {
-        setIsLoading(false)
-      }
     }
     getPosts()
   }, [userInfo])
