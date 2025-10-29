@@ -1,14 +1,12 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useUserContext } from '../contexts/UserContext'
-import { usePostContext } from '../contexts/PostContext'
+import { usePostStore } from '../store/postStore'
+import { useUserStore } from '../store/userStore'
 
 function EditPage() {
-  const userContext = useUserContext()
-  const postContext = usePostContext()
-  const { userInfo } = userContext
-  const { posts } = postContext
+  const posts = usePostStore((state) => state.posts)
+  const userInfo = useUserStore((state) => state.userInfo)
   const navigator = useNavigate()
   const { id: postId } = useParams()
   const [title, setTitle] = useState('')
@@ -19,7 +17,7 @@ function EditPage() {
       const editedPost = posts.find((post) => post.id === +postId)
       if (editedPost) {
         setTitle(editedPost.title)
-        setContent(editedPost.content)
+        setContent(editedPost.content || '')
       } else {
         alert('수정할 글을 찾을 수 없습니다.')
         navigator('/')
@@ -30,7 +28,7 @@ function EditPage() {
   const editPost = async () => {
     try {
       await axios.put(
-        `https://juicehan.shop/api/posts/${postId}`,
+        `http://localhost:3000/api/posts/${postId}`,
         {
           title,
           content,

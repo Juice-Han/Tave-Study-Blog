@@ -1,20 +1,19 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useUserContext } from '../hooks/useUserContext'
+import { useUserStore } from '../store/userStore'
 
 function LoginPage() {
-  const context = useUserContext()
-  const { changeUserInfo } = context
-  const [username, setUsername] = useState('')
+  const changeUserInfo = useUserStore((state) => state.changeUserInfo)
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const navigator = useNavigate()
   const login = async () => {
-    if (!username.trim() || !password.trim()) return
+    if (!email.trim() || !password.trim()) return
     try {
-      const res = await axios.post('https://juicehan.shop/api/auth/login', {
-        username,
+      const res = await axios.post('http://localhost:3000/api/auth/login', {
+        email,
         password,
       })
       if (res.status === 200) {
@@ -22,6 +21,7 @@ function LoginPage() {
         changeUserInfo({
           userId: user.id,
           username: user.username,
+          email: user.email,
           isLogin: true,
           token,
         })
@@ -40,9 +40,9 @@ function LoginPage() {
         <label htmlFor='username'>아이디</label>
         <input
           id='username'
-          type='text'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className='border'
         />
       </div>

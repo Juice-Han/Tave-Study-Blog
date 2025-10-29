@@ -1,29 +1,31 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios, { AxiosError } from 'axios'
-import { type Post } from '../contexts/PostContext'
-import { useUserContext } from '../hooks/useUserContext'
-import { usePostContext } from '../hooks/usePostContext'
+import { useUserStore } from '../store/userStore'
+import { usePostStore } from '../store/postStore'
+
+interface PostResponse {
+  id: number
+  title: string
+  author: {
+    id: number
+    username: string
+  }
+  created_at: string
+}
 
 function HomePage() {
-  if (Math.random() > 0.8) {
-    throw new Error('App 컴포넌트에서 에러 발생')
-  }
-  const userContext = useUserContext()
-  const postContext = usePostContext()
   const navigator = useNavigate()
-  const { userInfo, logout } = userContext
-  const { posts, changePosts } = postContext
+  const userInfo = useUserStore((state) => state.userInfo)
+  const logout = useUserStore((state) => state.logout)
+  const posts = usePostStore((state) => state.posts)
+  const changePosts = usePostStore((state) => state.changePosts)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<AxiosError | null>(null)
   const getPosts = async () => {
     setIsLoading(true)
     try {
-      const res = await axios.get('https://juicehan.shop/api/posts', {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      })
+      const res = await axios.get('http://localhost:3000/api/posts')
       changePosts(res.data.posts)
     } catch (e) {
       console.log(e)
@@ -59,23 +61,17 @@ function HomePage() {
       return <div>작성된 글이 존재하지 않습니다.</div>
     }
 
-    return posts.map((post: Post) => (
+    return posts.map((post: PostResponse) => (
       <div
         key={post.id}
         className='border mb-3'
         onClick={() => navigator(`/posts/${post.id}`)}
       >
         <p className='text-xl'>{post.title}</p>
-        <p>작성자: {post.author_username}</p>
+        <p>작성자: {post.author.username}</p>
         <p>
           생성일:{' '}
           {new Date(post.created_at.replace(' ', 'T') + 'Z').toLocaleString(
-            'ko-KR',
-          )}
-        </p>
-        <p>
-          수정일:{' '}
-          {new Date(post.updated_at.replace(' ', 'T') + 'Z').toLocaleString(
             'ko-KR',
           )}
         </p>

@@ -1,28 +1,33 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useUserContext } from '../hooks/useUserContext'
+import { useUserStore } from '../store/userStore'
+import { usePostStore } from '../store/postStore'
 
-interface Post {
+interface PostResponse {
   id: number
   title: string
   content: string
-  author_id: number
-  author_username: string
+  author: {
+    id: number
+    username: string
+  }
+  created_at: string
+  updated_at: string
 }
 
 function DetailPage() {
   const param = useParams()
+  const editPost = usePostStore((state) => state.editPost)
   const navigator = useNavigate()
-  const context = useUserContext()
+  const userInfo = useUserStore((state) => state.userInfo)
   const [isLoading, setIsLoading] = useState(true)
-  const [post, setPost] = useState<Post | null>(null)
-  const { userInfo } = context
+  const [post, setPost] = useState<PostResponse | null>(null)
   useEffect(() => {
     const getPostDetail = async () => {
       try {
         const res = await axios.get(
-          `https://juicehan.shop/api/posts/${param.id}`,
+          `http://localhost:3000/api/posts/${param.id}`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
@@ -30,6 +35,7 @@ function DetailPage() {
           },
         )
         setPost(res.data.post)
+        editPost(res.data.post.id, res.data.post.title, res.data.post.content)
         console.log(res.data.post, userInfo)
       } catch (e) {
         console.log(e)
@@ -42,13 +48,13 @@ function DetailPage() {
     getPostDetail()
   }, [])
 
-  const editPost = (postId: number) => {
+  const goEditPage = (postId: number) => {
     navigator(`/posts/edit/${postId}`)
   }
 
   const deletePost = async (postId: number) => {
     try {
-      await axios.delete(`https://juicehan.shop/api/posts/${postId}`, {
+      await axios.delete(`http://localhost:3000/api/posts/${postId}`, {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
         },
@@ -74,13 +80,13 @@ function DetailPage() {
           <div>
             <p>제목: {post.title}</p>
             <p>내용: {post.content}</p>
-            <p>작성자: {post.author_username}</p>
+            <p>작성자: {post.author.username}</p>
           </div>
           <div>
-            {userInfo.userId === post.author_id && (
+            {userInfo.userId === post.author.id && (
               <div>
                 <button
-                  onClick={() => editPost(post.id)}
+                  onClick={() => goEditPage(post.id)}
                   className='text-green-700'
                 >
                   수정

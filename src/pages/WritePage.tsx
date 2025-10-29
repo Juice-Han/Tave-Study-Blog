@@ -1,18 +1,17 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useUserContext } from '../hooks/useUserContext'
+import { useUserStore } from '../store/userStore'
 
 function WritePage() {
-  const context = useUserContext()
-  const { userInfo } = context
+  const userInfo = useUserStore((state) => state.userInfo)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const navigator = useNavigate()
   const writePost = async () => {
     try {
       await axios.post(
-        'https://juicehan.shop/api/posts',
+        'http://localhost:3000/api/posts',
         {
           title,
           content,
