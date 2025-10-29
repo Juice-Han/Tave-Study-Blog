@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { useUserContext } from '../contexts/UserContext'
 import { useNavigate } from 'react-router-dom'
+import { useUserContext } from '../hooks/useUserContext'
 
 function WritePage() {
   const context = useUserContext()

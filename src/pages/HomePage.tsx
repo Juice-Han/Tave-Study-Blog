@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useUserContext } from '../contexts/UserContext'
 import axios, { AxiosError } from 'axios'
-import { usePostContext, type Post } from '../contexts/PostContext'
+import { type Post } from '../contexts/PostContext'
+import { useUserContext } from '../hooks/useUserContext'
+import { usePostContext } from '../hooks/usePostContext'
 
 function HomePage() {
   if (Math.random() > 0.8) {
