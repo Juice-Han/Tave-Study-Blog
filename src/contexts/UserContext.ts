@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { createContext } from 'react'
 
 export interface UserInfo {
   userId: number | null
@@ -13,12 +13,4 @@ export interface UserContextType {
   logout: () => void
 }
 
-export const UserContext = React.createContext<UserContextType | null>(null)
-
-export function useUserContext() {
-  const context = useContext(UserContext)
-  if (!context) {
-    throw new Error('UserContext must be used within a UserProvider')
-  }
-  return context
-}
+export const UserContext = createContext<UserContextType | null>(null)

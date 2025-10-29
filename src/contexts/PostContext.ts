@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext } from 'react'
 
 export interface Post {
   id: number
@@ -15,11 +15,3 @@ export interface PostContextType {
 }
 
 export const PostContext = createContext<PostContextType | null>(null)
-
-export function usePostContext() {
-  const context = useContext(PostContext)
-  if (!context) {
-    throw new Error('PostContext must be used within a PostProvider')
-  }
-  return context
-}
