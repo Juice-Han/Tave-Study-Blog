@@ -26,18 +26,20 @@ function App() {
               path='/register'
               element={<RegisterPage />}
             />
-            <Route
-              path='/posts/write'
-              element={<WritePage />}
-            />
-            <Route
-              path='/posts/:id'
-              element={<DetailPage />}
-            />
-            <Route
-              path='/posts/edit/:id'
-              element={<EditPage />}
-            />
+            <Route path='/posts'>
+              <Route
+                path='write'
+                element={<WritePage />}
+              />
+              <Route
+                path=':id'
+                element={<DetailPage />}
+              />
+              <Route
+                path='edit/:id'
+                element={<EditPage />}
+              />
+            </Route>
           </Routes>
         </Suspense>
       </BrowserRouter>
