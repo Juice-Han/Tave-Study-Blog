@@ -2,33 +2,44 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '../store/userStore'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+interface WritePostPayload {
+  title: string
+  content: string
+}
 
 function WritePage() {
   const userInfo = useUserStore((state) => state.userInfo)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const navigator = useNavigate()
-  const writePost = async () => {
-    try {
-      await axios.post(
-        'http://localhost:3000/api/posts',
-        {
-          title,
-          content,
+  const queryClient = useQueryClient()
+
+  const { mutate: writePost, isPending: isWriting } = useMutation({
+    mutationFn: async (payload: WritePostPayload) => {
+      return axios.post('http://localhost:3000/api/posts', payload, {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        },
-      )
-      alert('글 작성을 완료했습니다.')
+      })
+    },
+    onSuccess: () => {
+      alert('글 작성을 성공적으로 완료했습니다.')
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
       navigator('/')
-    } catch (e) {
-      console.log(e)
-      alert('글을 작성하는 도중 오류가 발생했습니다.')
-    }
+    },
+    onError: (error) => {
+      console.log(error)
+      alert('글 작성 중 오류가 발생했습니다.')
+    },
+  })
+
+  const handleSubmit = () => {
+    if (isWriting) return // 중복 제출 방지
+    writePost({ title, content })
   }
+
   return (
     <>
       <div>
@@ -51,15 +62,17 @@ function WritePage() {
         />
       </div>
       <button
-        onClick={writePost}
+        onClick={handleSubmit}
         className='text-blue-900'
+        disabled={isWriting}
       >
-        작성
+        {isWriting ? '작성 중' : '작성'}
       </button>
       <br />
       <button
         onClick={() => navigator('/')}
         className='text-red-500'
+        disabled={isWriting}
       >
         취소
       </button>
