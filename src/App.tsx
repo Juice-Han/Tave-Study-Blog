@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HomePageWrappedByErrorBoundary from './pages/HomePageWrappedByErrorBoundary'
+import ProtectedRoute from './components/ProtectedRoute'
+import { useUserStore } from './store/userStore'
 
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
@@ -9,6 +11,7 @@ const DetailPage = lazy(() => import('./pages/DetailPage'))
 const EditPage = lazy(() => import('./pages/EditPage'))
 
 function App() {
+  const { isLogin } = useUserStore((state) => state.userInfo)
   return (
     <>
       <BrowserRouter>
@@ -16,7 +19,12 @@ function App() {
           <Routes>
             <Route
               path='/'
-              element={<HomePageWrappedByErrorBoundary />}
+              element={
+                <ProtectedRoute
+                  isAuthenticated={isLogin}
+                  element={<HomePageWrappedByErrorBoundary />}
+                />
+              }
             />
             <Route
               path='/login'
@@ -29,15 +37,30 @@ function App() {
             <Route path='/posts'>
               <Route
                 path='write'
-                element={<WritePage />}
+                element={
+                  <ProtectedRoute
+                    isAuthenticated={isLogin}
+                    element={<WritePage />}
+                  />
+                }
               />
               <Route
                 path=':id'
-                element={<DetailPage />}
+                element={
+                  <ProtectedRoute
+                    isAuthenticated={isLogin}
+                    element={<DetailPage />}
+                  />
+                }
               />
               <Route
                 path='edit/:id'
-                element={<EditPage />}
+                element={
+                  <ProtectedRoute
+                    isAuthenticated={isLogin}
+                    element={<EditPage />}
+                  />
+                }
               />
             </Route>
           </Routes>

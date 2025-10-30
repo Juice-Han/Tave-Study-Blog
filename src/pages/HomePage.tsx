@@ -35,12 +35,8 @@ function HomePage() {
     }
   }
   useEffect(() => {
-    if (!userInfo.isLogin) {
-      navigator('/login')
-      return
-    }
     getPosts()
-  }, [userInfo])
+  }, [])
 
   const logoutHandler = () => {
     logout()
