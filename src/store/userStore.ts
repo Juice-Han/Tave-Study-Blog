@@ -15,27 +15,23 @@ interface UserStore {
   logout: () => void
 }
 
+const initialState: UserInfo = {
+  userId: null,
+  username: null,
+  email: null,
+  isLogin: false,
+  token: null,
+}
+
 export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
-      userInfo: {
-        userId: null,
-        username: null,
-        email: null,
-        isLogin: false,
-        token: null,
-      },
+      userInfo: initialState,
       changeUserInfo: (updates) =>
         set((state) => ({ userInfo: { ...state.userInfo, ...updates } })),
       logout: () => {
         set(() => ({
-          userInfo: {
-            userId: null,
-            username: null,
-            email: null,
-            isLogin: false,
-            token: null,
-          },
+          userInfo: initialState,
         }))
       },
     }),
