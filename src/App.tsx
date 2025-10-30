@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HomePageWrappedByErrorBoundary from './pages/HomePageWrappedByErrorBoundary'
 import ProtectedRoute from './components/ProtectedRoute'
 import { useUserStore } from './store/userStore'
+import DefualtLayout from './layouts/DefaultLayout'
 
 const LoginPage = lazy(() => import('./pages/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/RegisterPage'))
@@ -18,15 +19,6 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route
-              path='/'
-              element={
-                <ProtectedRoute
-                  isAuthenticated={isLogin}
-                  element={<HomePageWrappedByErrorBoundary />}
-                />
-              }
-            />
-            <Route
               path='/login'
               element={<LoginPage />}
             />
@@ -34,34 +26,45 @@ function App() {
               path='/register'
               element={<RegisterPage />}
             />
-            <Route path='/posts'>
+            <Route element={<DefualtLayout />}>
               <Route
-                path='write'
+                path='/'
                 element={
                   <ProtectedRoute
                     isAuthenticated={isLogin}
-                    element={<WritePage />}
+                    element={<HomePageWrappedByErrorBoundary />}
                   />
                 }
               />
-              <Route
-                path=':id'
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isLogin}
-                    element={<DetailPage />}
-                  />
-                }
-              />
-              <Route
-                path='edit/:id'
-                element={
-                  <ProtectedRoute
-                    isAuthenticated={isLogin}
-                    element={<EditPage />}
-                  />
-                }
-              />
+              <Route path='/posts'>
+                <Route
+                  path='write'
+                  element={
+                    <ProtectedRoute
+                      isAuthenticated={isLogin}
+                      element={<WritePage />}
+                    />
+                  }
+                />
+                <Route
+                  path=':id'
+                  element={
+                    <ProtectedRoute
+                      isAuthenticated={isLogin}
+                      element={<DetailPage />}
+                    />
+                  }
+                />
+                <Route
+                  path='edit/:id'
+                  element={
+                    <ProtectedRoute
+                      isAuthenticated={isLogin}
+                      element={<EditPage />}
+                    />
+                  }
+                />
+              </Route>
             </Route>
           </Routes>
         </Suspense>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios, { AxiosError } from 'axios'
-import { useUserStore } from '../store/userStore'
 import { usePostStore } from '../store/postStore'
 
 interface PostResponse {
@@ -16,8 +15,6 @@ interface PostResponse {
 
 function HomePage() {
   const navigator = useNavigate()
-  const userInfo = useUserStore((state) => state.userInfo)
-  const logout = useUserStore((state) => state.logout)
   const posts = usePostStore((state) => state.posts)
   const changePosts = usePostStore((state) => state.changePosts)
   const [isLoading, setIsLoading] = useState(false)
@@ -37,12 +34,6 @@ function HomePage() {
   useEffect(() => {
     getPosts()
   }, [])
-
-  const logoutHandler = () => {
-    logout()
-    changePosts(null)
-    navigator('/login')
-  }
 
   const renderContent = () => {
     if (isLoading) {
@@ -77,16 +68,6 @@ function HomePage() {
 
   return (
     <>
-      <div>
-        {userInfo.isLogin && (
-          <button
-            onClick={logoutHandler}
-            className='bg-red-400'
-          >
-            로그아웃({userInfo.username})
-          </button>
-        )}
-      </div>
       <div>
         <button
           onClick={() => navigator('/posts/write')}

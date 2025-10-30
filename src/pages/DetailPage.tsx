@@ -36,7 +36,6 @@ function DetailPage() {
         )
         setPost(res.data.post)
         editPost(res.data.post.id, res.data.post.title, res.data.post.content)
-        console.log(res.data.post, userInfo)
       } catch (e) {
         console.log(e)
         alert('글을 불러오던 중 에러가 발생했습니다.')
